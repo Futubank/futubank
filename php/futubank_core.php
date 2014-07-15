@@ -4,8 +4,10 @@
  * ВНИМАНИЕ! Это общая часть всех плагинов. Оригинал всегда лежит по адресу:
  * https://github.com/Futubank/futuplugins/blob/master/php/futubank_core.php
  * =========================================================================
- * Вывод формы оплаты:
- *
+ * 
+ * 1. Вывод формы оплаты
+ * ---------------------
+ * 
  * $ff = new FutubankForm($merchant_id, $secret_key, $is_test);
  *
  * // URL для отправки формы:
@@ -31,6 +33,36 @@
  *
  * echo "<form action='$url' method='post'>" . FutubankForm::array_to_hidden_fields($form) . '<input type="submit"></form>';
  *
+ * 
+ * 2. Приём сообщений о выполненных транзакциях (http://yoursite.com/callback.php)
+ * -------------------------------------------------------------------------------
+ * // создаём класс обработчика транзакций, который знает всё про статусы заказов в вашей системе
+ * class MyCallbackHandler extends AbstractFutubankCallbackHandler {
+ *     // предположим, вся логика вашего плагина содержится в классе MyPlugin
+ *     private $plugin;
+ *     function __construct(MyPlugin $plugin)              { $this->plugin = $plugin; }
+ *     // определяем ключевые методы. Код методов приведён исключительно для примера
+ *     protected function get_futubank_form()              { return $this->plugin->get_futubank_form(); }
+ *     protected function load_order($order_id)            { return $this->plugin->load_order($order_id); }
+ *     protected function get_order_currency($order)       { return $order->getCurrency(); }
+ *     protected function get_order_amount($order)         { return $order->getAmount(); }
+ *     protected function is_order_completed($order)       { return $order->getStatus() == 'completed'; }
+ *     protected function mark_order_as_completed($order, array $data) {
+ *         $order->setStatus('completed');
+ *         $order->save()
+ *     }
+ *     protected function mark_order_as_error($order, array $data) {
+ *         $order->setStatus('error');
+ *         $order->save()
+ *     }
+ * }
+ * 
+ * // схема ориентироваочная и зависит от архитектуры вашей CMS или фреймворка
+ * $myplugin = new MyPlugin();
+ * $h = new MyCallbackHandler($myplugin);
+ * // обрабатываем сообщение от банка, пришедшее в _POST, и если всё хорошо, отмечаем заказ как оплаченный
+ * $h->show();
+ * 
  */
 class FutubankForm {
     private $merchant_id;
