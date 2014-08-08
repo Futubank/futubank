@@ -14,7 +14,7 @@
  * $url = $ff->get_url();
  *
  * // значения полей формы
- * $form = compose(
+ * $form = $ff->compose(
  *     $amount,        // сумма заказа
  *     $currency,      // валюта заказа (поддерживается только "RUB")
  *     $order_id,      // номер заказа
