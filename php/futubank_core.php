@@ -26,6 +26,9 @@
  *     $cancel_url,    // URL текущей страницы
  *     $meta,          // дополнительная информация в свободной форме (необязательно)
  *     $description    // описание (необязательно)
+ *     $recurring_frequency,    // Частота периодических платежей (необязятельно, один из вариантов 'day', 'week',
+ *                              //                                     'month', 'quartal', 'half-year', 'year')
+ *     $recurring_finish_date   // Конечная дата периодических платежей (необязательно, дата в формате 'YYYY-MM-DD')
  * );
  *
  * // далее можно самостоятельно вывести $form в виде hidden-полей,
@@ -70,6 +73,7 @@ class FutubankForm {
     private $is_test;
     private $plugininfo;
     private $cmsinfo;
+    private $RECURRING_FREQS;    
 
     function __construct(
         $merchant_id,
@@ -83,6 +87,7 @@ class FutubankForm {
         $this->is_test = (bool) $is_test;
         $this->plugininfo = $plugininfo;
         $this->cmsinfo = $cmsinfo;
+        $this->RECURRING_FREQS = array('day', 'week', 'month', 'quartal', 'half-year', 'year');
     }
 
     function get_url() {
@@ -101,28 +106,37 @@ class FutubankForm {
         $fail_url,
         $cancel_url,
         $meta = '',
-        $description = ''
+        $description = '',
+        $recurring_frequency = '',
+        $recurring_finish_date = ''
     ) {
         if (!$description) {
             $description = "Заказ №$order_id";
         }
+        if ($recurring_frequency) {
+            if (!array_search(trim($recurring_frequency), $this->RECURRING_FREQS)) {
+                die('Неверное значение поля recurring_frequency');
+            }
+        }
         $form = array(
-            'testing'        => (int) $this->is_test,
-            'merchant'       => $this->merchant_id,
-            'unix_timestamp' => time(),
-            'salt'           => $this->get_salt(32),
-            'amount'         => $amount,
-            'currency'       => $currency,
-            'description'    => $description,
-            'order_id'       => $order_id,
-            'client_email'   => $client_email,
-            'client_name'    => $client_name,
-            'client_phone'   => $client_phone,
-            'success_url'    => $success_url,
-            'fail_url'       => $fail_url,
-            'cancel_url'     => $cancel_url,
-            'meta'           => $meta,
-            'sysinfo'        => $this->get_sysinfo(),
+            'testing'               => (int) $this->is_test,
+            'merchant'              => $this->merchant_id,
+            'unix_timestamp'        => time(),
+            'salt'                  => $this->get_salt(32),
+            'amount'                => $amount,
+            'currency'              => $currency,
+            'description'           => $description,
+            'order_id'              => $order_id,
+            'client_email'          => $client_email,
+            'client_name'           => $client_name,
+            'client_phone'          => $client_phone,
+            'success_url'           => $success_url,
+            'fail_url'              => $fail_url,
+            'cancel_url'            => $cancel_url,
+            'meta'                  => $meta,
+            'sysinfo'               => $this->get_sysinfo(),
+            'recurring_frequency'   => $recurring_frequency,
+            'recurring_finish_date' => $recurring_finish_date
         );
         $form['signature'] = $this->get_signature($form);
         return $form;
