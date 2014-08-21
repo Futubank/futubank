@@ -97,7 +97,7 @@ class FutubankForm {
         $merchant_id,
         $secret_key,
         $is_test,
-        $plugininfo = '',
+        $plugininfo = 'Futuplugins/PHP',
         $cmsinfo = ''
     ) {
         $this->merchant_id = $merchant_id;
@@ -243,7 +243,7 @@ class FutubankForm {
         $form['signature'] = $this->get_signature($form);
         $paramstr = http_build_query($form);
         $ch = curl_init($this->get_rebill_url());
-        curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 5.1; rv:1.7.3) Gecko/20041001 Firefox/0.10.1" );
+        curl_setopt($ch, CURLOPT_USERAGENT, $this->plugininfo);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $paramstr);
