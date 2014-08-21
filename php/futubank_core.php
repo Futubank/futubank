@@ -113,8 +113,8 @@ class FutubankForm {
     }
     
     function get_rebill_url() {
-        #return 'https://secure.futubank.com/api/v1/rebill/';
-        return 'http://127.0.0.1:8000/api/v1/rebill/';
+        return 'https://secure.futubank.com/api/v1/rebill/';
+        //return 'http://127.0.0.1:8000/api/v1/rebill/';
     }
 
     function compose(
