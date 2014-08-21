@@ -91,30 +91,30 @@ class FutubankForm {
     private $is_test;
     private $plugininfo;
     private $cmsinfo;
-    private $RECURRING_FREQS;    
+    private $futugate_host;
 
     function __construct(
         $merchant_id,
         $secret_key,
         $is_test,
-        $plugininfo = 'Futuplugins/PHP',
+        $plugininfo = '',
         $cmsinfo = ''
     ) {
         $this->merchant_id = $merchant_id;
         $this->secret_key = $secret_key;
         $this->is_test = (bool) $is_test;
-        $this->plugininfo = $plugininfo;
+        $this->plugininfo = $plugininfo ?: 'Futuplugins/PHP v.' . phpversion();
         $this->cmsinfo = $cmsinfo;
+        $this->futugate_host = 'https://secure.futubank.com';
+        //$this->futugate_host = 'http://127.0.0.1:8000';
     }
 
     function get_url() {
-        return 'https://secure.futubank.com/pay/';
-        //return 'http://127.0.0.1:8000/pay/';
+        return $this->futugate_host . '/pay/';
     }
     
     function get_rebill_url() {
-        return 'https://secure.futubank.com/api/v1/rebill/';
-        //return 'http://127.0.0.1:8000/api/v1/rebill/';
+        return $this->futugate_host . '/api/v1/rebill/';
     }
 
     function compose(
