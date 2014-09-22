@@ -4,10 +4,10 @@
  * ВНИМАНИЕ! Это общая часть всех плагинов. Оригинал всегда лежит по адресу:
  * https://github.com/Futubank/futuplugins/blob/master/php/futubank_core.php
  * =========================================================================
- * 
+ *
  * 1. Вывод формы оплаты
  * ---------------------
- * 
+ *
  * $ff = new FutubankForm($merchant_id, $secret_key, $is_test);
  *
  * // URL для отправки формы:
@@ -38,7 +38,7 @@
  *
  * echo "<form action='$url' method='post'>" . FutubankForm::array_to_hidden_fields($form) . '<input type="submit"></form>';
  *
- * 
+ *
  * 2. Приём сообщений о выполненных транзакциях (http://yoursite.com/callback.php)
  * -------------------------------------------------------------------------------
  * // создаём класс обработчика транзакций, который знает всё про статусы заказов в вашей системе
@@ -61,7 +61,7 @@
  *         $order->save()
  *     }
  * }
- * 
+ *
  * // схема ориентироваочная и зависит от архитектуры вашей CMS или фреймворка
  * $myplugin = new MyPlugin();
  * $h = new MyCallbackHandler($myplugin);
@@ -69,12 +69,11 @@
  * $h->show($_POST);
  *
  *
- *
- * 3. Отправка рекуррентного платежа 
+ * 3. Отправка рекуррентного платежа
  * ---------------------------------
- * 
+ *
  * $ff = new FutubankForm($merchant_id, $secret_key, $is_test);
- * 
+ *
  * $result = $ff->rebill(
  *       $amount,           // сумма заказа
  *       $currency,         // валюта заказа (поддерживается только "RUB")
@@ -83,7 +82,7 @@
  *       $recurring_token,  // токен рекуррентной транзакции, получен при первом платеже
  *       $description = ''  // описание заказа (необязательно)
  * );
- * 
+ *
  */
 class FutubankForm {
     private $merchant_id;
@@ -112,7 +111,7 @@ class FutubankForm {
     function get_url() {
         return $this->futugate_host . '/pay/';
     }
-    
+
     function get_rebill_url() {
         return $this->futugate_host . '/api/v1/rebill/';
     }
@@ -216,7 +215,7 @@ class FutubankForm {
         }
         return $result;
     }
-    
+
     function rebill(
         $amount,
         $currency,
