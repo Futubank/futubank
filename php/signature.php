@@ -5,8 +5,9 @@ function get_signature($secret_key, $params) {
     sort($keys);
     $chunks = array();
     foreach ($keys as $k) {
-        if ($params[$k] && ($k != 'signature')) {
-            $chunks[] = $k . '=' . base64_encode($params[$k]);
+        $v = (string) $params[$k];
+        if (($v !== '') && ($k != 'signature')) {
+            $chunks[] = $k . '=' . base64_encode($v);
         }
     }
     return double_sha1($secret_key, implode('&', $chunks));
@@ -17,7 +18,7 @@ function double_sha1($secret_key, $data) {
 }
 
 $secret_key = 'C0FFEE';
-$params = Array(
+$params = array(
     "merchant" => 43210,
     "amount" => '174.7',
     "currency" => 'RUB',
@@ -34,4 +35,7 @@ $params = Array(
 
 $signature = get_signature($secret_key, $params);
 echo "signature = '$signature'\n";
-assert($signature == 'cb3743cc37d87f5a4255fc3a99c223c0e869c145');
+assert($signature == '163807001c1997be21352ea53fa6e5f4e988483d');
+
+assert(get_signature($secret_key, array('testing' => 'x')) == '22b6416d3d9ece6d969d40c62097f1b1878b0b89');
+assert(get_signature($secret_key, array('testing' => '0')) == 'c869d507973a539f73e5c5fe08017001171cfd1e');

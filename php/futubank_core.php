@@ -176,9 +176,9 @@ class FutubankForm {
         sort($keys);
         $chunks = array();
         foreach ($keys as $k) {
-            if ($params[$k] && ($k != $key)) {
-                $v = base64_encode((string) $params[$k]);
-                $chunks[] = "$k=$v";
+            $v = (string) $params[$k];
+            if (($v !== '') && ($k != 'signature')) {
+                $chunks[] = $k . '=' . base64_encode($v);
             }
         }
         return $this->double_sha1(implode('&', $chunks));
