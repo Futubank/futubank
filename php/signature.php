@@ -39,3 +39,4 @@ assert($signature == '163807001c1997be21352ea53fa6e5f4e988483d');
 
 assert(get_signature($secret_key, array('testing' => 'x')) == '22b6416d3d9ece6d969d40c62097f1b1878b0b89');
 assert(get_signature($secret_key, array('testing' => '0')) == 'c869d507973a539f73e5c5fe08017001171cfd1e');
+assert(get_signature($secret_key, array('testing' => 0)) == 'c869d507973a539f73e5c5fe08017001171cfd1e');
